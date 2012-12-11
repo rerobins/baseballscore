@@ -70,4 +70,9 @@ public class AtBatResultInPlayWrapper implements IInPlayDescription {
     public int hashCode() {
         return result.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Wrapped: [" + result + "]";
+    }
 }

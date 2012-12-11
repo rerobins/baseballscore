@@ -19,6 +19,7 @@ package org.meerkatlabs.baseballscore.models;
 
 import org.meerkatlabs.baseballscore.models.enums.Base;
 import org.meerkatlabs.baseballscore.models.enums.InPlay;
+import org.meerkatlabs.baseballscore.models.interfaces.IInPlayDescription;
 
 /**
  * Object that will contain the current state of the field with regards to base runners.  It
@@ -26,6 +27,9 @@ import org.meerkatlabs.baseballscore.models.enums.InPlay;
  * walk, or become out.  The field will assume that the runners will always be forced forwards,
  * so when updating the field, it should be done from the lower bases first in the hopes that
  * the number of updates needed to update the field should be reduced.
+ * <p/>
+ * TODO: Need to figure out how to back up an inning in case the user makes a mistake and goes
+ * towards the next half inning prematurely.
  *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
@@ -37,21 +41,26 @@ public class Field {
     final AtBat[] baseRunners = new AtBat[Base.values().length];
 
     /**
+     * Default constructor.
+     */
+    public Field() {
+
+    }
+
+    /**
      * Update the field with the at bat and the result provided.
      *
      * @param atBat  at bat that will manipulate the field.
      * @param result how the field has manipulated the field.
      */
-    public void processResult(final AtBat atBat, final InPlay result) {
+    public void processResult(final AtBat atBat, final IInPlayDescription result) {
 
-        switch (result) {
-
-            case BASE_ON_BALLS:
-                walkRunner(atBat);
-                return;
-
-            default:
-                throw new IllegalStateException("Unknown result to process for the field.");
+        if (result == InPlay.BASE_ON_BALLS) {
+            walkRunner(atBat);
+        } else if (result == InPlay.NONE) {
+            // Nothing to process.
+        } else {
+            throw new IllegalStateException("Unknown result to process for the field: " + result.toString());
         }
 
     }
@@ -59,10 +68,10 @@ public class Field {
     /**
      * Update the field by walking the runner.
      *
-     * @param walkee the at bat that was just walked.
+     * @param batter the at bat that was just walked.
      */
-    void walkRunner(final AtBat walkee) {
-        advanceRunners(Base.FIRST_BASE, walkee);
+    void walkRunner(final AtBat batter) {
+        advanceRunners(Base.FIRST_BASE, batter);
     }
 
     /**
@@ -85,6 +94,26 @@ public class Field {
 
         baseRunners[base.ordinal()] = atBat;
 
+    }
+
+    /**
+     * Return the base runner on the base provided.
+     *
+     * @param base base to look up.
+     * @return the base runner or null.
+     */
+    public AtBat getBaseRunner(final Base base) {
+        switch (base) {
+            case FIRST_BASE:
+            case SECOND_BASE:
+            case THIRD_BASE:
+            case HOME_PLATE:
+                return baseRunners[base.ordinal()];
+
+            case NONE:
+            default:
+                throw new IllegalArgumentException("Unknown base: " + base.toString());
+        }
     }
 
 }

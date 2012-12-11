@@ -79,5 +79,4 @@ public enum InPlay implements IInPlayDescription {
 
     }
 
-
 }

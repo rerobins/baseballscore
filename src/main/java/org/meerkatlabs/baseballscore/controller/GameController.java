@@ -18,6 +18,7 @@
 package org.meerkatlabs.baseballscore.controller;
 
 import org.meerkatlabs.baseballscore.models.AtBat;
+import org.meerkatlabs.baseballscore.models.Field;
 import org.meerkatlabs.baseballscore.models.Game;
 import org.meerkatlabs.baseballscore.models.HalfInning;
 import org.meerkatlabs.baseballscore.models.Lineup;
@@ -64,6 +65,11 @@ public class GameController {
      * Determines if the game is complete or not.
      */
     boolean gameComplete = false;
+
+    /**
+     * The current field state.
+     */
+    Field currentField;
 
     /**
      * Constructor.
@@ -123,6 +129,9 @@ public class GameController {
 
         currentHalfInning.setCurrentAtBat(currentAtBat);
 
+        // Reset the field
+        currentField = new Field();
+
     }
 
     /**
@@ -153,7 +162,7 @@ public class GameController {
 
         }
 
-        processResult(result);
+        processResult(currentAtBat, result);
 
     }
 
@@ -180,7 +189,7 @@ public class GameController {
                 break;
         }
 
-        processResult(result);
+        processResult(currentAtBat, result);
     }
 
     /**
@@ -188,11 +197,16 @@ public class GameController {
      *
      * @param result result that should be processed.
      */
-    protected void processResult(final IInPlayDescription result) {
+    protected void processResult(final AtBat atBat, final IInPlayDescription result) {
 
         // If the result is an out and the results should no longer be processed, move on.
         if (result.isOut() && !increaseOuts()) {
             return;
+        }
+
+        // If the result is not an out, then the field needs to be updated.
+        if (!result.isOut()) {
+            currentField.processResult(atBat, result);
         }
 
         // If the result advances the lineup, then move on to the next at bat.
