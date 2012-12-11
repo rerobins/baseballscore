@@ -15,23 +15,26 @@
  * along with BaseballScore.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.meerkatlabs.baseballscore.models.enums;
+package org.meerkatlabs.baseballscore.models.interfaces;
 
 /**
- * The pitch types that can occur when the pitcher places the ball into play.
+ * Description of how the ball got into play.
  *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
-public enum Pitch {
+public interface IInPlayDescription {
 
     /**
-     * The pitcher threw a ball.
+     * Did the in play end in an out.
+     *
+     * @return if the play ended in an out.
      */
-    BALL,
+    boolean isOut();
 
     /**
-     * The pitcher threw a strike.
+     * Does this play advance the lineup of the batting team.
+     *
+     * @return if the play results in the next batter being up to bat.
      */
-    STRIKE
-
+    boolean advanceLineup();
 }

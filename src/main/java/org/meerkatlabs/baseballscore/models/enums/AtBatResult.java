@@ -18,7 +18,9 @@
 package org.meerkatlabs.baseballscore.models.enums;
 
 /**
- * A collection of results that were determined by an at bat.
+ * A collection of results that can be marked as the reason why an at bat has ended.  An at bat has ended when the
+ * player is out, a player has scored, or the player is left on base because the inning is over.
+ *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
 public enum AtBatResult {
@@ -39,29 +41,14 @@ public enum AtBatResult {
     GROUND_OUT,
 
     /**
-     * The result is that the batter hit a single.
+     * The result is that the batter was left on base.
      */
-    SINGLE,
+    LEFT_ON_BASE,
 
     /**
-     * The result is that the batter hit a double.
+     * The result is that the batter scored before the inning was over.
      */
-    DOUBLE,
-
-    /**
-     * The result is that the batter hit a triple.
-     */
-    TRIPLE,
-
-    /**
-     * The result is that the batter hit a home run.
-     */
-    HOME_RUN,
-
-    /**
-     * The result is that the batter walked.
-     */
-    BASE_ON_BALLS,
+    SCORED,
 
     /**
      * The result doesn't impact the state of the game, only the at bat.
@@ -70,6 +57,7 @@ public enum AtBatResult {
 
     /**
      * Is the batter out because of the at bat.
+     *
      * @return if the batter is out.
      */
     public boolean isOut() {
@@ -79,11 +67,8 @@ public enum AtBatResult {
             case GROUND_OUT:
                 return true;
 
-            case SINGLE:
-            case DOUBLE:
-            case TRIPLE:
-            case HOME_RUN:
-            case BASE_ON_BALLS:
+            case LEFT_ON_BASE:
+            case SCORED:
             case NONE:
             default:
                 return false;
@@ -92,6 +77,7 @@ public enum AtBatResult {
 
     /**
      * Does the result of the at bat advance the line up.
+     *
      * @return if the at bat should progress the game forward.
      */
     public boolean advanceLineup() {
@@ -102,11 +88,7 @@ public enum AtBatResult {
             case STRIKE_OUT:
             case FLY_OUT:
             case GROUND_OUT:
-            case SINGLE:
-            case DOUBLE:
-            case TRIPLE:
-            case HOME_RUN:
-            case BASE_ON_BALLS:
+            case SCORED:
             default:
                 return true;
         }

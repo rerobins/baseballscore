@@ -22,6 +22,7 @@ import org.meerkatlabs.baseballscore.models.enums.Base;
 
 /**
  * Test case for the field object.
+ *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
 public class FieldTestCase extends TestCase {
@@ -54,8 +55,6 @@ public class FieldTestCase extends TestCase {
                 firstBase, gameField.baseRunners[Base.SECOND_BASE.ordinal()]);
         assertSame("Check new runner on first",
                 newRunner, gameField.baseRunners[Base.FIRST_BASE.ordinal()]);
-
-
 
     }
 

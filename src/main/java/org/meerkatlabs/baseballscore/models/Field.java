@@ -17,8 +17,8 @@
 
 package org.meerkatlabs.baseballscore.models;
 
-import org.meerkatlabs.baseballscore.models.enums.AtBatResult;
 import org.meerkatlabs.baseballscore.models.enums.Base;
+import org.meerkatlabs.baseballscore.models.enums.InPlay;
 
 /**
  * Object that will contain the current state of the field with regards to base runners.  It
@@ -26,6 +26,7 @@ import org.meerkatlabs.baseballscore.models.enums.Base;
  * walk, or become out.  The field will assume that the runners will always be forced forwards,
  * so when updating the field, it should be done from the lower bases first in the hopes that
  * the number of updates needed to update the field should be reduced.
+ *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
 public class Field {
@@ -37,10 +38,11 @@ public class Field {
 
     /**
      * Update the field with the at bat and the result provided.
-     * @param atBat at bat that will manipulate the field.
+     *
+     * @param atBat  at bat that will manipulate the field.
      * @param result how the field has manipulated the field.
      */
-    public void processResult(final AtBat atBat, final AtBatResult result) {
+    public void processResult(final AtBat atBat, final InPlay result) {
 
         switch (result) {
 
@@ -56,6 +58,7 @@ public class Field {
 
     /**
      * Update the field by walking the runner.
+     *
      * @param walkee the at bat that was just walked.
      */
     void walkRunner(final AtBat walkee) {
@@ -64,7 +67,8 @@ public class Field {
 
     /**
      * Advance the runners starting at the base to start at.
-     * @param base the base that the at bat should be placed at.
+     *
+     * @param base  the base that the at bat should be placed at.
      * @param atBat the at bat that should be placed on the base.
      */
     void advanceRunners(final Base base, final AtBat atBat) {
@@ -80,7 +84,6 @@ public class Field {
         }
 
         baseRunners[base.ordinal()] = atBat;
-
 
     }
 

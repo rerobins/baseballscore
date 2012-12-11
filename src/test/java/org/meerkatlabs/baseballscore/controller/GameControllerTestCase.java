@@ -21,6 +21,7 @@ import junit.framework.TestCase;
 import org.meerkatlabs.baseballscore.models.AtBat;
 import org.meerkatlabs.baseballscore.models.Game;
 import org.meerkatlabs.baseballscore.models.HalfInning;
+import org.meerkatlabs.baseballscore.models.enums.InPlay;
 import org.meerkatlabs.baseballscore.models.enums.Pitch;
 import org.meerkatlabs.baseballscore.util.BuildGame;
 
@@ -28,7 +29,7 @@ import org.meerkatlabs.baseballscore.util.BuildGame;
  * Want this test case to be as if a game was actually being played between these two
  * teams to make sure that the game controller is able to handle the information
  * and make the correct state changes as the game is played.
- *
+ * <p/>
  * Will want to be able to have multiple versions of these tests.
  */
 public class GameControllerTestCase extends TestCase {
@@ -85,18 +86,18 @@ public class GameControllerTestCase extends TestCase {
         // Throw a strike, make sure that the strike increased, and that the current
         // at bat didn't change.
         controller.pitch(Pitch.STRIKE);
-        assertEquals("Validate Strike one",
-                1, controller.currentHalfInning.getCurrentAtBat().getStrikes());
         assertSame("Validate still on same batter",
                 firstAtBat, controller.currentHalfInning.getCurrentAtBat());
+        assertEquals("Validate Strike one",
+                1, controller.currentHalfInning.getCurrentAtBat().getStrikes());
         assertEquals("Make sure that the game controller is still at 0 outs. Strike 1",
                 0, controller.currentHalfInning.getCurrentOuts());
 
         controller.pitch(Pitch.STRIKE);
-        assertEquals("validate strike two",
-                2, controller.currentHalfInning.getCurrentAtBat().getStrikes());
         assertSame("validate still on same batter strike 2",
                 firstAtBat, controller.currentHalfInning.getCurrentAtBat());
+        assertEquals("validate strike two",
+                2, controller.currentHalfInning.getCurrentAtBat().getStrikes());
         assertEquals("Make sure that the game controller is still at 0 outs. Strike 2",
                 0, controller.currentHalfInning.getCurrentOuts());
 
@@ -158,6 +159,29 @@ public class GameControllerTestCase extends TestCase {
         assertSame(game.getHomeLineup().getActivePitcher(), secondAtBat.getPitcher());
         assertSame(game.getAwayLineup().getCurrentBatter(), secondAtBat.getBatter());
         assertSame(game.getAwayLineup().getPlayerAtIndex(1), secondAtBat.getBatter());
+    }
+
+    public void testThrowingFiveFouls() {
+        Game game = BuildGame.INSTANCE.buildBasicGame();
+        GameController controller = new GameController(game);
+
+        controller.startGame();
+
+        AtBat firstAtBat = controller.currentHalfInning.getCurrentAtBat();
+
+        assertEquals("Make sure that the game controller starts at 0 outs.",
+                0, controller.currentHalfInning.getCurrentOuts());
+
+        controller.inPlay(InPlay.FOUL);
+        assertEquals("Validate Strike one",
+                1, controller.currentHalfInning.getCurrentAtBat().getStrikes());
+        assertSame("Validate still on same batter",
+                firstAtBat, controller.currentHalfInning.getCurrentAtBat());
+        assertEquals("Make sure that the game controller is still at 0 outs. Strike 1",
+                0, controller.currentHalfInning.getCurrentOuts());
+        assertEquals("Validate Foul one",
+                1, controller.currentHalfInning.getCurrentAtBat().getFouls());
+
     }
 
 }

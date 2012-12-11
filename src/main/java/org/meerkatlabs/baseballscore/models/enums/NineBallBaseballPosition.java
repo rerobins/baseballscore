@@ -21,26 +21,74 @@ import org.meerkatlabs.baseballscore.models.IPosition;
 
 /**
  * Positions for a standard base ball game.
+ *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
 public enum NineBallBaseballPosition implements IPosition {
 
 
+    /**
+     * Pitcher.
+     */
     PITCHER("Pitcher", "P"),
+
+    /**
+     * Catcher.
+     */
     CATCHER("Catcher", "C"),
+
+    /**
+     * First Base.
+     */
     FIRST_BASE("First Base", "1B"),
+
+    /**
+     * Second Base.
+     */
     SECOND_BASE("Second Base", "2B"),
+
+    /**
+     * Third Base.
+     */
     THIRD_BASE("Third Base", "3B"),
+
+    /**
+     * Short Stop.
+     */
     SHORT_STOP("Short Stop", "SS"),
+
+    /**
+     * Left Field.
+     */
     LEFT_FIELD("Left Field", "LF"),
+
+    /**
+     * Center Field.
+     */
     CENTER_FIELD("Center Field", "CF"),
+
+    /**
+     * Right Field.
+     */
     RIGHT_FIELD("Right Field", "RF");
-    
+
+    /**
+     * Human readable version of the enumeration.
+     */
     String humanReadable;
-    
+
+    /**
+     * Abbreviation of the position.
+     */
     String abbreviation;
-    
-    NineBallBaseballPosition(String humanReadable, String abbreviation) {
+
+    /**
+     * Constructor.
+     *
+     * @param humanReadable string.
+     * @param abbreviation  string.
+     */
+    NineBallBaseballPosition(final String humanReadable, final String abbreviation) {
         this.humanReadable = humanReadable;
         this.abbreviation = abbreviation;
     }
@@ -57,7 +105,7 @@ public enum NineBallBaseballPosition implements IPosition {
 
     @Override
     public int getNumericalValue() {
-        return ordinal()+1;
+        return ordinal() + 1;
     }
 
     @Override

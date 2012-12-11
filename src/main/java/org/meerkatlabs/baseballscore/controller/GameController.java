@@ -17,15 +17,20 @@
 
 package org.meerkatlabs.baseballscore.controller;
 
-import org.meerkatlabs.baseballscore.models.*;
-import org.meerkatlabs.baseballscore.models.enums.AtBatResult;
+import org.meerkatlabs.baseballscore.models.AtBat;
+import org.meerkatlabs.baseballscore.models.Game;
+import org.meerkatlabs.baseballscore.models.HalfInning;
+import org.meerkatlabs.baseballscore.models.Lineup;
+import org.meerkatlabs.baseballscore.models.enums.InPlay;
 import org.meerkatlabs.baseballscore.models.enums.Pitch;
+import org.meerkatlabs.baseballscore.models.interfaces.IInPlayDescription;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Controller of a base ball game based on the rules defined in the game type.
+ *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
 public class GameController {
@@ -62,6 +67,7 @@ public class GameController {
 
     /**
      * Constructor.
+     *
      * @param game game that this controller will be manipulating.
      */
     public GameController(final Game game) {
@@ -121,6 +127,7 @@ public class GameController {
 
     /**
      * Throws a pitch to the current at bat.
+     *
      * @param pitchType the pitch that is being thrown to the batter by the pitcher.
      */
     public void pitch(final Pitch pitchType) {
@@ -131,7 +138,7 @@ public class GameController {
 
         AtBat currentAtBat = currentHalfInning.getCurrentAtBat();
 
-        AtBatResult result = AtBatResult.NONE;
+        IInPlayDescription result = InPlay.NONE;
 
         switch (pitchType) {
             case STRIKE:
@@ -152,19 +159,36 @@ public class GameController {
 
     /**
      * Provides a result for the current at bat instead of a default pitch.
-     * @param result result that should be used to manipulate the game.
+     *
+     * @param inPlay result that should be used to manipulate the game.
      */
-    public void pitch(final AtBatResult result) {
+    public void inPlay(final InPlay inPlay) {
         if (gameComplete) {
             throw new IllegalStateException("Cannot pitch in a complete game.");
         }
+
+        AtBat currentAtBat = currentHalfInning.getCurrentAtBat();
+
+        IInPlayDescription result = InPlay.NONE;
+
+        switch (inPlay) {
+            case FOUL:
+                currentAtBat.hitFoul();
+                break;
+
+            default:
+                break;
+        }
+
+        processResult(result);
     }
 
     /**
      * Process the results of an at bat.
+     *
      * @param result result that should be processed.
      */
-    protected void processResult(final AtBatResult result) {
+    protected void processResult(final IInPlayDescription result) {
 
         // If the result is an out and the results should no longer be processed, move on.
         if (result.isOut() && !increaseOuts()) {
@@ -184,8 +208,9 @@ public class GameController {
 
     /**
      * Add an out to the current half inning.
+     *
      * @return returns if the results should still be processed.  If the inning is over,
-     * then the results should no longer be processed by this controller.
+     *         then the results should no longer be processed by this controller.
      */
     protected boolean increaseOuts() {
         int outs = currentHalfInning.getCurrentOuts() + 1;

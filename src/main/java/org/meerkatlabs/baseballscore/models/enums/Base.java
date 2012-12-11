@@ -19,6 +19,7 @@ package org.meerkatlabs.baseballscore.models.enums;
 
 /**
  * List of enumerations that are used to look up the base runners on each of the bases.
+ *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
 public enum Base {
@@ -50,10 +51,11 @@ public enum Base {
 
     /**
      * Returns the next base that this base should point to.
+     *
      * @return next base after this value.
      */
     public Base getNextBase() {
-        Base returnValue = NONE;
+        Base returnValue;
 
         switch (this) {
             case FIRST_BASE:

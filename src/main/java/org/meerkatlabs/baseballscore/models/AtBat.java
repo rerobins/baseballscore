@@ -18,13 +18,13 @@
 package org.meerkatlabs.baseballscore.models;
 
 import org.meerkatlabs.baseballscore.models.enums.AtBatResult;
+import org.meerkatlabs.baseballscore.models.enums.InPlay;
+import org.meerkatlabs.baseballscore.models.interfaces.IInPlayDescription;
 
 /**
- * Created with IntelliJ IDEA.
- * User: rerobins
- * Date: 9/24/12
- * Time: 11:58 AM
- * To change this template use File | Settings | File Templates.
+ * An at bat represents a attempt by the batter to place the ball into play.
+ *
+ * @author Robert Robinson rerobins@meerkatlabs.org
  */
 public class AtBat {
 
@@ -60,8 +60,9 @@ public class AtBat {
 
     /**
      * Constructor.
+     *
      * @param pitcher the pitcher for this at bat.
-     * @param batter the batter for this at bat.
+     * @param batter  the batter for this at bat.
      */
     public AtBat(final Player pitcher, final Player batter) {
         this.pitcher = pitcher;
@@ -70,6 +71,7 @@ public class AtBat {
 
     /**
      * Return the pitcher for this at bat
+     *
      * @return pitcher.
      */
     public Player getPitcher() {
@@ -78,6 +80,7 @@ public class AtBat {
 
     /**
      * Return the batter for this at bat.
+     *
      * @return the player that is batting.
      */
     public Player getBatter() {
@@ -86,6 +89,7 @@ public class AtBat {
 
     /**
      * Result accessor.
+     *
      * @return result.
      */
     public AtBatResult getResult() {
@@ -94,6 +98,7 @@ public class AtBat {
 
     /**
      * Strikes accessor.
+     *
      * @return strike count.
      */
     public int getStrikes() {
@@ -102,6 +107,7 @@ public class AtBat {
 
     /**
      * Balls accessor.
+     *
      * @return balls.
      */
     public int getBalls() {
@@ -110,6 +116,7 @@ public class AtBat {
 
     /**
      * Fouls accessor.
+     *
      * @return foul count.
      */
     public int getFouls() {
@@ -118,27 +125,45 @@ public class AtBat {
 
     /**
      * Throw a strike and return the result.
+     *
      * @return the result from throwing a strike.
      */
-    public AtBatResult throwStrike() {
+    public IInPlayDescription throwStrike() {
         strikes++;
         if (strikes == 3) {
-            return AtBatResult.STRIKE_OUT;
+            return new AtBatResultInPlayWrapper(AtBatResult.STRIKE_OUT);
         }
 
-        return AtBatResult.NONE;
+        return InPlay.NONE;
     }
 
     /**
      * Throw a ball and return the result.
+     *
      * @return the result from throwing a ball.
      */
-    public AtBatResult throwBall() {
+    public IInPlayDescription throwBall() {
         balls++;
         if (balls == 4) {
-            return AtBatResult.BASE_ON_BALLS;
+            return InPlay.BASE_ON_BALLS;
+        }
+
+        return InPlay.NONE;
+    }
+
+    /**
+     * Throw a pitch that was hit, but ended up foul.
+     *
+     * @return the result of throwing the foul hit ball.
+     */
+    public AtBatResult hitFoul() {
+        fouls++;
+
+        if (strikes < 2) {
+            strikes++;
         }
 
         return AtBatResult.NONE;
+
     }
 }
