@@ -24,32 +24,31 @@ package org.meerkatlabs.baseballscore.models;
 import java.util.Comparator;
 
 /**
- *
  * @author Robert Robinson
  */
 public class Player implements Comparable<Player> {
-    
+
     public enum Bats {
         UNKNOWN,
         RIGHT,
         LEFT,
-        SWITCH;
+        SWITCH
     }
-    
+
     public enum Throws {
         UNKNOWN,
         RIGHT,
-        LEFT;
+        LEFT
     }
-    
+
     String name;
 
     IPosition preferredPosition;
-    
+
     int uniformNumber;
-    
+
     Bats battingHand = Bats.RIGHT;
-    
+
     Throws throwingHand = Throws.RIGHT;
 
     public Player(int uniformNumber, String name) {
@@ -128,14 +127,14 @@ public class Player implements Comparable<Player> {
         hash = 31 * hash + this.uniformNumber;
         return hash;
     }
-    
+
     public static class NameComparator implements Comparator<Player> {
 
         @Override
         public int compare(Player o1, Player o2) {
             return o1.getName().compareToIgnoreCase(o2.getName());
         }
-        
+
     }
-    
+
 }

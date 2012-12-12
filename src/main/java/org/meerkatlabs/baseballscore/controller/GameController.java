@@ -178,11 +178,18 @@ public class GameController {
 
         AtBat currentAtBat = currentHalfInning.getCurrentAtBat();
 
-        IInPlayDescription result = InPlay.NONE;
+        IInPlayDescription result = inPlay;
 
         switch (inPlay) {
             case FOUL:
-                currentAtBat.hitFoul();
+                result = currentAtBat.hitFoul();
+                break;
+
+            case SINGLE:
+            case DOUBLE:
+            case TRIPLE:
+            case HOME_RUN:
+                currentAtBat.setInPlay(inPlay);
                 break;
 
             default:

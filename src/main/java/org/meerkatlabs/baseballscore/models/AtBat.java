@@ -36,7 +36,7 @@ public class AtBat {
     /**
      * Batter.
      */
-    Player batter;
+    final Player batter;
 
     /**
      * How did it go down...
@@ -57,6 +57,11 @@ public class AtBat {
      * Current fouls.
      */
     int fouls;
+
+    /**
+     * How did the at bat get the ball into play.  Can be null.
+     */
+    IInPlayDescription inPlay;
 
     /**
      * Constructor.
@@ -124,6 +129,33 @@ public class AtBat {
     }
 
     /**
+     * Result mutator.
+     *
+     * @param result result of this at bat.
+     */
+    public void setResult(final AtBatResult result) {
+        this.result = result;
+    }
+
+    /**
+     * InPlay accessor.
+     *
+     * @return in play description.
+     */
+    public IInPlayDescription getInPlay() {
+        return inPlay;
+    }
+
+    /**
+     * InPlay mutator.
+     *
+     * @param inPlay value.
+     */
+    public void setInPlay(final IInPlayDescription inPlay) {
+        this.inPlay = inPlay;
+    }
+
+    /**
      * Throw a strike and return the result.
      *
      * @return the result from throwing a strike.
@@ -156,14 +188,13 @@ public class AtBat {
      *
      * @return the result of throwing the foul hit ball.
      */
-    public AtBatResult hitFoul() {
+    public IInPlayDescription hitFoul() {
         fouls++;
 
         if (strikes < 2) {
             strikes++;
         }
 
-        return AtBatResult.NONE;
-
+        return InPlay.NONE;
     }
 }

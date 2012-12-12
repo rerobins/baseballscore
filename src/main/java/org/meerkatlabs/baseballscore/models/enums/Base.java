@@ -45,7 +45,7 @@ public enum Base {
     HOME_PLATE,
 
     /**
-     * Used to count the number of bases.
+     * Not on any of the bases.
      */
     NONE;
 

@@ -133,10 +133,10 @@ public class AtBatTestCase extends TestCase {
         assertEquals("Verify initial foul count",
                 0, currentAtBat.getFouls());
 
-        AtBatResult result = currentAtBat.hitFoul();
+        IInPlayDescription result = currentAtBat.hitFoul();
 
         assertEquals("Verify that strike 1 result is none",
-                result, AtBatResult.NONE);
+                result, InPlay.NONE);
         assertEquals("Verify that strikes is 1",
                 1, currentAtBat.getStrikes());
         assertEquals("Verify that balls is 0 after one strike",
@@ -145,25 +145,25 @@ public class AtBatTestCase extends TestCase {
                 1, currentAtBat.getFouls());
 
         result = currentAtBat.hitFoul();
-        assertEquals(result, AtBatResult.NONE);
+        assertEquals(result, InPlay.NONE);
         assertEquals(2, currentAtBat.getStrikes());
         assertEquals(0, currentAtBat.getBalls());
         assertEquals(2, currentAtBat.getFouls());
 
         result = currentAtBat.hitFoul();
-        assertEquals(result, AtBatResult.NONE);
+        assertEquals(result, InPlay.NONE);
         assertEquals(2, currentAtBat.getStrikes());
         assertEquals(0, currentAtBat.getBalls());
         assertEquals(3, currentAtBat.getFouls());
 
         result = currentAtBat.hitFoul();
-        assertEquals(result, AtBatResult.NONE);
+        assertEquals(result, InPlay.NONE);
         assertEquals(2, currentAtBat.getStrikes());
         assertEquals(0, currentAtBat.getBalls());
         assertEquals(4, currentAtBat.getFouls());
 
         result = currentAtBat.hitFoul();
-        assertEquals(result, AtBatResult.NONE);
+        assertEquals(result, InPlay.NONE);
         assertEquals(2, currentAtBat.getStrikes());
         assertEquals(0, currentAtBat.getBalls());
         assertEquals(5, currentAtBat.getFouls());

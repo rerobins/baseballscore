@@ -79,4 +79,40 @@ public enum InPlay implements IInPlayDescription {
 
     }
 
+    /**
+     * How does the in play description translate into the bast the the batter ends up on.
+     *
+     * @return the base value that the batter should end up on.
+     */
+    public Base baseValue() {
+        Base returnValue;
+
+        switch (this) {
+            case BASE_ON_BALLS:
+            case SINGLE:
+                returnValue = Base.FIRST_BASE;
+                break;
+
+            case DOUBLE:
+                returnValue = Base.SECOND_BASE;
+                break;
+
+            case TRIPLE:
+                returnValue = Base.THIRD_BASE;
+                break;
+
+            case HOME_RUN:
+                returnValue = Base.HOME_PLATE;
+                break;
+
+
+            case FOUL:
+            case NONE:
+            default:
+                returnValue = Base.NONE;
+        }
+
+        return returnValue;
+    }
+
 }

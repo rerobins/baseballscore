@@ -17,6 +17,7 @@
 
 package org.meerkatlabs.baseballscore.models;
 
+import org.meerkatlabs.baseballscore.models.enums.AtBatResult;
 import org.meerkatlabs.baseballscore.models.enums.Base;
 import org.meerkatlabs.baseballscore.models.enums.InPlay;
 import org.meerkatlabs.baseballscore.models.interfaces.IInPlayDescription;
@@ -55,9 +56,16 @@ public class Field {
      */
     public void processResult(final AtBat atBat, final IInPlayDescription result) {
 
-        if (result == InPlay.BASE_ON_BALLS) {
-            walkRunner(atBat);
-        } else if (result == InPlay.NONE) {
+        if (result == InPlay.BASE_ON_BALLS
+                || result == InPlay.SINGLE
+                || result == InPlay.DOUBLE
+                || result == InPlay.TRIPLE
+                || result == InPlay.HOME_RUN) {
+
+            runnerHit(atBat, (InPlay) result);
+
+        } else if (result == InPlay.NONE
+                || result == InPlay.FOUL) {
             // Nothing to process.
         } else {
             throw new IllegalStateException("Unknown result to process for the field: " + result.toString());
@@ -66,12 +74,27 @@ public class Field {
     }
 
     /**
-     * Update the field by walking the runner.
+     * Moves the batter to the correct value based on the hit that was made.
      *
-     * @param batter the at bat that was just walked.
+     * @param batter batter that was hitting.
+     * @param hit    hit that was made.
      */
-    void walkRunner(final AtBat batter) {
-        advanceRunners(Base.FIRST_BASE, batter);
+    void runnerHit(final AtBat batter, final InPlay hit) {
+
+        // The easiest way to do this is to iterate the number of bases that need to be moved,
+        // and for each one move the current batter forward, check the result of the field,
+        // and then update the scores if necessary.
+
+        Base baseEndedUpOn = hit.baseValue();
+
+        for (int i = 0; i <= baseEndedUpOn.ordinal(); ++i) {
+
+            Base baseToMoveTo = Base.values()[i];
+
+            advanceRunners(baseToMoveTo, batter);
+            updateScore();
+        }
+
     }
 
     /**
@@ -114,6 +137,41 @@ public class Field {
             default:
                 throw new IllegalArgumentException("Unknown base: " + base.toString());
         }
+    }
+
+    /**
+     * Set the base runner onto the base provided.
+     *
+     * @param base  base that the runner should be on.
+     * @param atBat the runner that should be there.
+     */
+    void setBaseRunner(final Base base, final AtBat atBat) {
+        switch (base) {
+            case FIRST_BASE:
+            case SECOND_BASE:
+            case THIRD_BASE:
+            case HOME_PLATE:
+                baseRunners[base.ordinal()] = atBat;
+                break;
+
+            case NONE:
+            default:
+                throw new IllegalArgumentException("Unknown base: " + base.toString());
+        }
+    }
+
+    /**
+     * Update the base runner that is currently on home, if there is one.
+     */
+    void updateScore() {
+        AtBat atBat = getBaseRunner(Base.HOME_PLATE);
+
+        if (atBat != null) {
+            atBat.setResult(AtBatResult.SCORED);
+        }
+
+        // Clear the base runner that is on home plate since he is no longer in play.
+        setBaseRunner(Base.HOME_PLATE, null);
     }
 
 }
