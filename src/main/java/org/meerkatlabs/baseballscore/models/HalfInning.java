@@ -27,6 +27,7 @@ import java.util.List;
 
 /**
  * Data store for half innings.
+ *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
 public class HalfInning {
@@ -81,8 +82,9 @@ public class HalfInning {
 
     /**
      * Protected constructor for moving to next inning of the game.
+     *
      * @param inningNumber new inning number.
-     * @param half new inning half.
+     * @param half         new inning half.
      */
     protected HalfInning(final int inningNumber, final Half half) {
         this.inningNumber = inningNumber;
@@ -91,6 +93,7 @@ public class HalfInning {
 
     /**
      * Gets the next half inning that follows this one.
+     *
      * @return next half inning value.
      */
     public HalfInning getNextHalfInning() {
@@ -112,6 +115,7 @@ public class HalfInning {
 
     /**
      * Current at bat for this half inning.
+     *
      * @return current at bat object.
      */
     public AtBat getCurrentAtBat() {
@@ -120,15 +124,22 @@ public class HalfInning {
 
     /**
      * Current at bat mutator.
+     *
      * @param currentAtBat value.
      */
     public void setCurrentAtBat(final AtBat currentAtBat) {
+
+        if (currentAtBat == null) {
+            throw new IllegalArgumentException("Current at bat cannot be null.");
+        }
+
         atBats.add(currentAtBat);
         this.currentAtBat = currentAtBat;
     }
 
     /**
      * Current outs accessor.
+     *
      * @return current outs.
      */
     public int getCurrentOuts() {
@@ -137,6 +148,7 @@ public class HalfInning {
 
     /**
      * Current outs mutator.
+     *
      * @param currentOuts value.
      */
     public void setCurrentOuts(final int currentOuts) {
@@ -145,6 +157,7 @@ public class HalfInning {
 
     /**
      * Inning number accessor.
+     *
      * @return inning number.
      */
     public int getInningNumber() {
@@ -153,6 +166,7 @@ public class HalfInning {
 
     /**
      * Inning half accessor.
+     *
      * @return current inning half.
      */
     public Half getInningHalf() {
@@ -161,6 +175,7 @@ public class HalfInning {
 
     /**
      * Get the collection of at bats associated with this half inning.
+     *
      * @return current list of at bats in this inning.
      */
     public List<AtBat> getAtBats() {

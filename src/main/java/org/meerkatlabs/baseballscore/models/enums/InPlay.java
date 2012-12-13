@@ -105,7 +105,6 @@ public enum InPlay implements IInPlayDescription {
                 returnValue = Base.HOME_PLATE;
                 break;
 
-
             case FOUL:
             case NONE:
             default:
