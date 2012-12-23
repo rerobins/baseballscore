@@ -49,10 +49,19 @@ public class Advancement implements IRunnerEvent {
         this.finalBase = finalBase;
     }
 
+    /**
+     * Return the reason that the runner got to advance to the next base.
+     * @return the event that forced this advancement to occur.
+     */
     public IRunnerEvent getBecauseOf() {
         return becauseOf;
     }
 
+    /**
+     * Return the base that the runner will have advanced to because of the the runner
+     * event.
+     * @return the base that the runner ends up on because of the advancement event.
+     */
     public Base getFinalBase() {
         return finalBase;
     }
