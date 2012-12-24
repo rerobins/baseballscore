@@ -21,6 +21,8 @@
  */
 package org.meerkatlabs.baseballscore.models;
 
+import org.meerkatlabs.baseballscore.interfaces.IHalfInningListener;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -73,34 +75,55 @@ public class HalfInning {
     int currentOuts = 0;
 
     /**
-     * Default constructor for building the first half inning of the game.
+     * The current lay down of the infield with the base runners on the respective
+     * bases.
      */
-    public HalfInning() {
-        this.inningNumber = 1;
-        this.inningHalf = Half.TOP;
-    }
+    Field currentField = null;
 
     /**
-     * Protected constructor for moving to next inning of the game.
-     *
-     * @param inningNumber new inning number.
-     * @param half         new inning half.
+     * List of listeners that are subscribing to the state changes of this half inning.
      */
-    protected HalfInning(final int inningNumber, final Half half) {
-        this.inningNumber = inningNumber;
-        this.inningHalf = half;
+    private final List<IHalfInningListener> listeners = new ArrayList<IHalfInningListener>();
+
+    /**
+     * The maximum number of outs that are allowed in this half inning of baseball.
+     */
+    private final int maximumOuts;
+
+    /**
+     * Team that is up to bat.
+     */
+    final Lineup battingTeam;
+
+    /**
+     * Team that is in the field.
+     */
+    final Lineup fieldingTeam;
+
+    /**
+     * Default constructor for building the first half inning of the game.
+     * @param gameInformation the current game type information for this object.
+     */
+    public HalfInning(final Game gameInformation) {
+        this.inningNumber = 1;
+        this.inningHalf = Half.TOP;
+        this.fieldingTeam = gameInformation.getHomeLineup();
+        this.battingTeam = gameInformation.getAwayLineup();
+        this.maximumOuts = gameInformation.getGameType().getOutsPerHalfInning();
+
+        this.currentField = new Field();
     }
 
     /**
      * Gets the next half inning that follows this one.
      *
-     * @return next half inning value.
+     * @param previousHalf the previous half inning
      */
-    public HalfInning getNextHalfInning() {
-        int nextInning = inningNumber;
+    protected HalfInning(final HalfInning previousHalf) {
+        int nextInning = previousHalf.inningNumber;
         Half nextHalf;
 
-        switch (inningHalf) {
+        switch (previousHalf.inningHalf) {
             case TOP:
                 nextHalf = Half.BOTTOM;
                 break;
@@ -110,7 +133,22 @@ public class HalfInning {
                 nextInning++;
         }
 
-        return new HalfInning(nextInning, nextHalf);
+        this.inningNumber = nextInning;
+        this.inningHalf = nextHalf;
+        this.fieldingTeam = previousHalf.battingTeam;
+        this.battingTeam = previousHalf.fieldingTeam;
+        this.maximumOuts = previousHalf.maximumOuts;
+
+        this.currentField = new Field();
+    }
+
+    /**
+     *
+     *
+     * @return next half inning value.
+     */
+    public HalfInning getNextHalfInning() {
+        return new HalfInning(this);
     }
 
     /**
@@ -180,5 +218,73 @@ public class HalfInning {
      */
     public List<AtBat> getAtBats() {
         return Collections.unmodifiableList(atBats);
+    }
+
+    /**
+     * Current field accessor.
+     * @return current field lay out.
+     */
+    public Field getCurrentField() {
+        return this.currentField;
+    }
+
+    /**
+     * Add a listener to this half inning.
+     * @param listener listener.
+     */
+    public void addListener(final IHalfInningListener listener) {
+        if (listener != null) {
+            this.listeners.add(listener);
+        }
+    }
+
+    /**
+     * Remove a listener from this half inning.
+     * @param listener listener.
+     */
+    public void removeListener(final IHalfInningListener listener) {
+        if (listener != null) {
+            this.listeners.remove(listener);
+        }
+    }
+
+    /**
+     * Clear all of the listeners out of this half inning.
+     */
+    public void clearListeners() {
+        this.listeners.clear();
+    }
+
+    /**
+     * Notify all of the listeners that this half inning has been completed.
+     */
+    public void notifyInningFinished() {
+        for (IHalfInningListener listener : listeners) {
+            listener.finished(this);
+        }
+    }
+
+    /**
+     * Maximum outs accessor.
+     * @return the maximum number of outs that are allowed in this half inning.
+     */
+    public int getMaximumOuts() {
+        return maximumOuts;
+    }
+
+    /**
+     * Batting team accessor.
+     * @return batting team.
+     */
+    public Lineup getBattingTeam() {
+        return battingTeam;
+    }
+
+    /**
+     * Field team accessor.
+     * @return fielding team.
+     */
+    public Lineup getFieldingTeam() {
+        return fieldingTeam;
     }
 }

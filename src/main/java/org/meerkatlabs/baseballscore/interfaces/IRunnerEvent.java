@@ -17,13 +17,19 @@
 
 package org.meerkatlabs.baseballscore.interfaces;
 
+import org.meerkatlabs.baseballscore.models.HalfInning;
+
 /**
- * Created with IntelliJ IDEA.
- * User: rerobins
- * Date: 12/12/12
- * Time: 5:26 PM
- *
+ * Event definition that explains how a runner interacts with the game.
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
 public interface IRunnerEvent {
+
+    /**
+     * Process the event taking into consideration the half inning that the event occurred in.
+     * @param currentHalfInning current half inning.
+     * @return the result of the event being processed.
+     */
+    IRunnerResult process(HalfInning currentHalfInning);
+
 }

@@ -18,6 +18,8 @@
 package org.meerkatlabs.baseballscore.events.batter;
 
 import org.meerkatlabs.baseballscore.interfaces.IBatterEvent;
+import org.meerkatlabs.baseballscore.interfaces.IBatterResult;
+import org.meerkatlabs.baseballscore.models.AtBat;
 
 /**
  * An event when the current pitcher throws a strike.
@@ -25,4 +27,10 @@ import org.meerkatlabs.baseballscore.interfaces.IBatterEvent;
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
 public class Strike implements IBatterEvent {
+
+    @Override
+    public IBatterResult process(final AtBat atBat) {
+        return atBat.throwStrike();
+    }
+
 }

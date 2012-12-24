@@ -18,6 +18,8 @@
 package org.meerkatlabs.baseballscore.results;
 
 import org.meerkatlabs.baseballscore.interfaces.IOut;
+import org.meerkatlabs.baseballscore.models.AtBat;
+import org.meerkatlabs.baseballscore.models.HalfInning;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,5 +48,27 @@ public abstract class AbstractOut implements IOut {
         assert (outNumber > 0);
 
         this.outNumber = outNumber;
+    }
+
+    /**
+     * Provide the common logic of processing an out event.
+     * @param currentHalfInning the current half inning that is being played.
+     */
+    protected void processAtBatOut(final HalfInning currentHalfInning) {
+        int outs = currentHalfInning.getCurrentOuts() + 1;
+        currentHalfInning.setCurrentOuts(outs);
+
+        // Need to advance the line of the batting team forward.
+        currentHalfInning.getBattingTeam().advanceLineup();
+
+        // If the outs are at the maximum, then the half inning is over.
+        if (outs == currentHalfInning.getMaximumOuts()) {
+            currentHalfInning.notifyInningFinished();
+        } else {
+            AtBat currentAtBat = new AtBat(currentHalfInning.getFieldingTeam().getActivePitcher(),
+                    currentHalfInning.getBattingTeam().getCurrentBatter());
+
+            currentHalfInning.setCurrentAtBat(currentAtBat);
+        }
     }
 }

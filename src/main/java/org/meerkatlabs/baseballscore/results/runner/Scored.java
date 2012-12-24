@@ -17,11 +17,18 @@
 
 package org.meerkatlabs.baseballscore.results.runner;
 
+import org.meerkatlabs.baseballscore.interfaces.IRunnerResult;
+import org.meerkatlabs.baseballscore.models.HalfInning;
+
 /**
  * Result that is stored when a runner scores.
  *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
-public class Scored {
+public class Scored implements IRunnerResult {
 
+    @Override
+    public void process(final HalfInning currentHalfInning) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

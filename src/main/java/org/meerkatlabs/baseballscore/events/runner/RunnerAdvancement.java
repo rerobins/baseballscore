@@ -23,33 +23,49 @@ import org.meerkatlabs.baseballscore.models.HalfInning;
 import org.meerkatlabs.baseballscore.models.enums.Base;
 
 /**
- * Data object that describes a runner stealing a base.
+ * A runner event that cause a runner to advance to a new base because of another runner event forced it.  This
+ * will also allow for a batter to go from first to third on another batter's single hit.
  *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
-public class StolenBase implements IRunnerEvent {
+public class RunnerAdvancement implements IRunnerEvent {
 
     /**
-     * Base stolen.
+     * The event that caused this player to move forward at least one base.
      */
-    final Base baseStolen;
+    IRunnerEvent becauseOf;
+
+    /**
+     * The base that the runner finished on.
+     */
+    Base finalBase;
 
     /**
      * Constructor.
      *
-     * @param baseStolen base stolen.
+     * @param becauseOf event that caused the advancement.
+     * @param finalBase base runner ended up on.
      */
-    public StolenBase(final Base baseStolen) {
-        this.baseStolen = baseStolen;
+    public RunnerAdvancement(final IRunnerEvent becauseOf, final Base finalBase) {
+        this.becauseOf = becauseOf;
+        this.finalBase = finalBase;
     }
 
     /**
-     * Base stolen accessor.
-     *
-     * @return base stolen.
+     * Return the reason that the runner got to advance to the next base.
+     * @return the event that forced this advancement to occur.
      */
-    public Base getBaseStolen() {
-        return baseStolen;
+    public IRunnerEvent getBecauseOf() {
+        return becauseOf;
+    }
+
+    /**
+     * Return the base that the runner will have advanced to because of the the runner
+     * event.
+     * @return the base that the runner ends up on because of the advancement event.
+     */
+    public Base getFinalBase() {
+        return finalBase;
     }
 
     @Override

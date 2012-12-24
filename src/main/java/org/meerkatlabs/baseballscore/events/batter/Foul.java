@@ -18,6 +18,8 @@
 package org.meerkatlabs.baseballscore.events.batter;
 
 import org.meerkatlabs.baseballscore.interfaces.IBatterEvent;
+import org.meerkatlabs.baseballscore.interfaces.IBatterResult;
+import org.meerkatlabs.baseballscore.models.AtBat;
 
 /**
  * Event that is recorded when the batter hits the ball out of play.
@@ -25,4 +27,10 @@ import org.meerkatlabs.baseballscore.interfaces.IBatterEvent;
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
 public class Foul implements IBatterEvent {
+
+    @Override
+    public IBatterResult process(final AtBat atBat) {
+        return atBat.hitFoul();
+    }
+
 }

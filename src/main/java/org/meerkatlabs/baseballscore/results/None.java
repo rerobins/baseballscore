@@ -15,21 +15,26 @@
  * along with BaseballScore.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.meerkatlabs.baseballscore.events.batter;
+package org.meerkatlabs.baseballscore.results;
 
-import org.meerkatlabs.baseballscore.interfaces.IBatterEvent;
 import org.meerkatlabs.baseballscore.interfaces.IBatterResult;
+import org.meerkatlabs.baseballscore.interfaces.IRunnerResult;
 import org.meerkatlabs.baseballscore.models.AtBat;
+import org.meerkatlabs.baseballscore.models.HalfInning;
 
 /**
- * An event when the current pitcher throws a ball.
- *
+ * A syntactically null result for the a result.
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
-public class Ball implements IBatterEvent {
+public class None implements IBatterResult, IRunnerResult {
 
     @Override
-    public IBatterResult process(final AtBat atBat) {
-        return atBat.throwBall();
+    public void process(final AtBat currentAtBat, final HalfInning currentHalfInning) {
+        // Don't have to do anything because nothing has happened.
+    }
+
+    @Override
+    public void process(final HalfInning currentHalfInning) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

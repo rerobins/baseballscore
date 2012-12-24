@@ -17,7 +17,10 @@
 
 package org.meerkatlabs.baseballscore.results.batter;
 
+import org.meerkatlabs.baseballscore.interfaces.IBatterResult;
 import org.meerkatlabs.baseballscore.interfaces.IOut;
+import org.meerkatlabs.baseballscore.models.AtBat;
+import org.meerkatlabs.baseballscore.models.HalfInning;
 import org.meerkatlabs.baseballscore.models.Player;
 import org.meerkatlabs.baseballscore.results.AbstractOut;
 
@@ -27,7 +30,7 @@ import org.meerkatlabs.baseballscore.results.AbstractOut;
  *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
-public class FlyOut extends AbstractOut implements IOut {
+public class FlyOut extends AbstractOut implements IOut, IBatterResult {
 
     /**
      * The player that is credited with catching the fly ball.
@@ -52,4 +55,8 @@ public class FlyOut extends AbstractOut implements IOut {
         return credited;
     }
 
+    @Override
+    public void process(final AtBat currentAtBat, final HalfInning currentHalfInning) {
+        processAtBatOut(currentHalfInning);
+    }
 }

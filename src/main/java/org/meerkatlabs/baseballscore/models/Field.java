@@ -17,6 +17,7 @@
 
 package org.meerkatlabs.baseballscore.models;
 
+import org.meerkatlabs.baseballscore.events.runner.Hit;
 import org.meerkatlabs.baseballscore.models.enums.AtBatResult;
 import org.meerkatlabs.baseballscore.models.enums.Base;
 import org.meerkatlabs.baseballscore.models.enums.InPlay;
@@ -49,43 +50,18 @@ public class Field {
     }
 
     /**
-     * Update the field with the at bat and the result provided.
-     *
-     * @param atBat  at bat that will manipulate the field.
-     * @param result how the field has manipulated the field.
-     */
-    public void processResult(final AtBat atBat, final IInPlayDescription result) {
-
-        if (result == InPlay.BASE_ON_BALLS
-                || result == InPlay.SINGLE
-                || result == InPlay.DOUBLE
-                || result == InPlay.TRIPLE
-                || result == InPlay.HOME_RUN) {
-
-            runnerHit(atBat, (InPlay) result);
-
-        } else if (result == InPlay.NONE
-                || result == InPlay.FOUL) {
-            // Nothing to process.
-        } else {
-            throw new IllegalStateException("Unknown result to process for the field: " + result.toString());
-        }
-
-    }
-
-    /**
      * Moves the batter to the correct value based on the hit that was made.
      *
      * @param batter batter that was hitting.
      * @param hit    hit that was made.
      */
-    void runnerHit(final AtBat batter, final InPlay hit) {
+    public void runnerHit(final AtBat batter, final Hit hit) {
 
         // The easiest way to do this is to iterate the number of bases that need to be moved,
         // and for each one move the current batter forward, check the result of the field,
         // and then update the scores if necessary.
 
-        Base baseEndedUpOn = hit.baseValue();
+        Base baseEndedUpOn = hit.getFinalBase();
 
         for (int i = 0; i <= baseEndedUpOn.ordinal(); ++i) {
 
@@ -95,6 +71,15 @@ public class Field {
             updateScore();
         }
 
+    }
+
+    /**
+     * Walk the at bat to first base.
+     * @param atBat the runner that should advance to first base.
+     */
+    public void walkRunner(final AtBat atBat) {
+        advanceRunners(Base.FIRST_BASE, atBat);
+        updateScore();
     }
 
     /**

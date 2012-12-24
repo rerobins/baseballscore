@@ -17,6 +17,8 @@
 
 package org.meerkatlabs.baseballscore.results.runner;
 
+import org.meerkatlabs.baseballscore.interfaces.IRunnerResult;
+import org.meerkatlabs.baseballscore.models.HalfInning;
 import org.meerkatlabs.baseballscore.models.enums.Base;
 
 /**
@@ -24,7 +26,7 @@ import org.meerkatlabs.baseballscore.models.enums.Base;
  *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
-public class LeftOnBase {
+public class LeftOnBase implements IRunnerResult {
 
     /**
      * The base that the runner was left on.
@@ -49,4 +51,8 @@ public class LeftOnBase {
         return baseLeftOn;
     }
 
+    @Override
+    public void process(final HalfInning currentHalfInning) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

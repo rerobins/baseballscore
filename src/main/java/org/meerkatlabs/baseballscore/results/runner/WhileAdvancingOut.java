@@ -17,6 +17,8 @@
 
 package org.meerkatlabs.baseballscore.results.runner;
 
+import org.meerkatlabs.baseballscore.interfaces.IRunnerResult;
+import org.meerkatlabs.baseballscore.models.HalfInning;
 import org.meerkatlabs.baseballscore.models.IPosition;
 import org.meerkatlabs.baseballscore.results.AbstractOut;
 
@@ -28,7 +30,7 @@ import java.util.Arrays;
  *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
-public class WhileAdvancingOut extends AbstractOut {
+public class WhileAdvancingOut extends AbstractOut implements IRunnerResult {
 
     /**
      * The players that were participating to get the out.
@@ -53,4 +55,8 @@ public class WhileAdvancingOut extends AbstractOut {
         return players;
     }
 
+    @Override
+    public void process(final HalfInning currentHalfInning) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

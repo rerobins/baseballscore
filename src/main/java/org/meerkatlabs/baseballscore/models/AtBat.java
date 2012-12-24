@@ -17,9 +17,13 @@
 
 package org.meerkatlabs.baseballscore.models;
 
+import org.meerkatlabs.baseballscore.interfaces.IBatterResult;
 import org.meerkatlabs.baseballscore.models.enums.AtBatResult;
 import org.meerkatlabs.baseballscore.models.enums.InPlay;
 import org.meerkatlabs.baseballscore.models.interfaces.IInPlayDescription;
+import org.meerkatlabs.baseballscore.results.None;
+import org.meerkatlabs.baseballscore.results.batter.StrikeOut;
+import org.meerkatlabs.baseballscore.results.batter.Walk;
 
 /**
  * An at bat represents a attempt by the batter to place the ball into play.
@@ -160,13 +164,13 @@ public class AtBat {
      *
      * @return the result from throwing a strike.
      */
-    public IInPlayDescription throwStrike() {
+    public IBatterResult throwStrike() {
         strikes++;
         if (strikes == 3) {
-            return new AtBatResultInPlayWrapper(AtBatResult.STRIKE_OUT);
+            return new StrikeOut(pitcher);
         }
 
-        return InPlay.NONE;
+        return new None();
     }
 
     /**
@@ -174,13 +178,13 @@ public class AtBat {
      *
      * @return the result from throwing a ball.
      */
-    public IInPlayDescription throwBall() {
+    public IBatterResult throwBall() {
         balls++;
         if (balls == 4) {
-            return InPlay.BASE_ON_BALLS;
+            return new Walk(pitcher);
         }
 
-        return InPlay.NONE;
+        return new None();
     }
 
     /**
@@ -188,13 +192,13 @@ public class AtBat {
      *
      * @return the result of throwing the foul hit ball.
      */
-    public IInPlayDescription hitFoul() {
+    public IBatterResult hitFoul() {
         fouls++;
 
         if (strikes < 2) {
             strikes++;
         }
 
-        return InPlay.NONE;
+        return new None();
     }
 }

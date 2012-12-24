@@ -17,6 +17,11 @@
 
 package org.meerkatlabs.baseballscore.controller;
 
+import org.meerkatlabs.baseballscore.interfaces.IBatterEvent;
+import org.meerkatlabs.baseballscore.interfaces.IBatterResult;
+import org.meerkatlabs.baseballscore.interfaces.IHalfInningListener;
+import org.meerkatlabs.baseballscore.interfaces.IRunnerEvent;
+import org.meerkatlabs.baseballscore.interfaces.IRunnerResult;
 import org.meerkatlabs.baseballscore.models.AtBat;
 import org.meerkatlabs.baseballscore.models.Field;
 import org.meerkatlabs.baseballscore.models.Game;
@@ -34,7 +39,7 @@ import java.util.List;
  *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
-public class GameController {
+public class GameController implements IHalfInningListener {
 
     /**
      * The game that is being controlled by this controller.
@@ -67,11 +72,6 @@ public class GameController {
     boolean gameComplete = false;
 
     /**
-     * The current field state.
-     */
-    Field currentField;
-
-    /**
      * Constructor.
      *
      * @param game game that this controller will be manipulating.
@@ -100,7 +100,7 @@ public class GameController {
      */
     protected void startNextHalfInning() {
         if (currentHalfInning == null) {
-            currentHalfInning = new HalfInning();
+            currentHalfInning = new HalfInning(game);
         } else {
             currentHalfInning = currentHalfInning.getNextHalfInning();
         }
@@ -108,9 +108,11 @@ public class GameController {
         if (currentHalfInning.getInningNumber() > game.getGameType().getRegulationInningCount()) {
             // The game is over.
             gameComplete = true;
-        } else {
-            innings.add(currentHalfInning);
+            return;
         }
+
+        innings.add(currentHalfInning);
+        currentHalfInning.addListener(this);
 
         switch (currentHalfInning.getInningHalf()) {
             case TOP:
@@ -128,10 +130,6 @@ public class GameController {
                 battingTeam.getCurrentBatter());
 
         currentHalfInning.setCurrentAtBat(currentAtBat);
-
-        // Reset the field
-        currentField = new Field();
-
     }
 
     /**
@@ -139,7 +137,7 @@ public class GameController {
      *
      * @param pitchType the pitch that is being thrown to the batter by the pitcher.
      */
-    public void pitch(final Pitch pitchType) {
+    public void pitch(final IBatterEvent pitchType) {
 
         if (gameComplete) {
             throw new IllegalStateException("Cannot pitch in a complete game.");
@@ -147,23 +145,8 @@ public class GameController {
 
         AtBat currentAtBat = currentHalfInning.getCurrentAtBat();
 
-        IInPlayDescription result = InPlay.NONE;
-
-        switch (pitchType) {
-            case STRIKE:
-                result = currentAtBat.throwStrike();
-                break;
-
-            case BALL:
-                result = currentAtBat.throwBall();
-                break;
-
-            default:
-
-        }
-
-        processResult(currentAtBat, result);
-
+        IBatterResult result = pitchType.process(currentAtBat);
+        result.process(currentAtBat, currentHalfInning);
     }
 
     /**
@@ -171,78 +154,21 @@ public class GameController {
      *
      * @param inPlay result that should be used to manipulate the game.
      */
-    public void inPlay(final InPlay inPlay) {
+    public void inPlay(final IRunnerEvent inPlay) {
         if (gameComplete) {
             throw new IllegalStateException("Cannot pitch in a complete game.");
         }
 
-        AtBat currentAtBat = currentHalfInning.getCurrentAtBat();
+        IRunnerResult result = inPlay.process(currentHalfInning);
 
-        IInPlayDescription result = inPlay;
-
-        switch (inPlay) {
-            case FOUL:
-                result = currentAtBat.hitFoul();
-                break;
-
-            case SINGLE:
-            case DOUBLE:
-            case TRIPLE:
-            case HOME_RUN:
-                currentAtBat.setInPlay(inPlay);
-                break;
-
-            default:
-                break;
-        }
-
-        processResult(currentAtBat, result);
-    }
-
-    /**
-     * Process the results of an at bat.
-     *
-     * @param result result that should be processed.
-     */
-    protected void processResult(final AtBat atBat, final IInPlayDescription result) {
-
-        // If the result is an out and the results should no longer be processed, move on.
-        if (result.isOut() && !increaseOuts()) {
-            return;
-        }
-
-        // If the result is not an out, then the field needs to be updated.
-        if (!result.isOut()) {
-            currentField.processResult(atBat, result);
-        }
-
-        // If the result advances the lineup, then move on to the next at bat.
-        if (result.advanceLineup()) {
-            battingTeam.advanceLineup();
-            AtBat currentAtBat = new AtBat(fieldingTeam.getActivePitcher(),
-                    battingTeam.getCurrentBatter());
-
-            currentHalfInning.setCurrentAtBat(currentAtBat);
-        }
+        result.process(currentHalfInning);
 
     }
 
-    /**
-     * Add an out to the current half inning.
-     *
-     * @return returns if the results should still be processed.  If the inning is over,
-     *         then the results should no longer be processed by this controller.
-     */
-    protected boolean increaseOuts() {
-        int outs = currentHalfInning.getCurrentOuts() + 1;
-        currentHalfInning.setCurrentOuts(outs);
+    @Override
+    public void finished(final HalfInning halfInning) {
+        halfInning.removeListener(this);
 
-        if (outs == game.getGameType().getOutsPerHalfInning()) {
-            startNextHalfInning();
-            return false;
-        }
-
-        return true;
+        startNextHalfInning();
     }
-
 }

@@ -17,10 +17,20 @@
 
 package org.meerkatlabs.baseballscore.interfaces;
 
+import org.meerkatlabs.baseballscore.models.AtBat;
+
 /**
  * Interface for at bat events.
  *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
 public interface IBatterEvent {
+
+    /**
+     * Have the event process the at bat for itself.
+     * @param atBat the at bat that this event should be manipulating.
+     * @return the result of processing the event.
+     */
+    IBatterResult process(AtBat atBat);
+
 }

@@ -18,6 +18,8 @@
 package org.meerkatlabs.baseballscore.events.runner;
 
 import org.meerkatlabs.baseballscore.interfaces.IRunnerEvent;
+import org.meerkatlabs.baseballscore.interfaces.IRunnerResult;
+import org.meerkatlabs.baseballscore.models.HalfInning;
 import org.meerkatlabs.baseballscore.models.PlayerError;
 
 /**
@@ -38,5 +40,10 @@ public class ErrorAdvancement implements IRunnerEvent {
 
     public PlayerError getError() {
         return error;
+    }
+
+    @Override
+    public IRunnerResult process(final HalfInning currentHalfInning) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

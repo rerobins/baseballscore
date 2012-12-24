@@ -15,21 +15,21 @@
  * along with BaseballScore.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.meerkatlabs.baseballscore.events.batter;
+package org.meerkatlabs.baseballscore.interfaces;
 
-import org.meerkatlabs.baseballscore.interfaces.IBatterEvent;
-import org.meerkatlabs.baseballscore.interfaces.IBatterResult;
-import org.meerkatlabs.baseballscore.models.AtBat;
+import org.meerkatlabs.baseballscore.models.HalfInning;
 
 /**
- * An event when the current pitcher throws a ball.
- *
+ * Listener that can subscribe to the half innings and receive updates when the inning state
+ * has changed.
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
-public class Ball implements IBatterEvent {
+public interface IHalfInningListener {
 
-    @Override
-    public IBatterResult process(final AtBat atBat) {
-        return atBat.throwBall();
-    }
+    /**
+     * Called when the half inning has reached its third out.
+     * @param halfInning half inning that is now completed.
+     */
+    void finished(HalfInning halfInning);
+
 }

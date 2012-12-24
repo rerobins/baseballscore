@@ -15,63 +15,46 @@
  * along with BaseballScore.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.meerkatlabs.baseballscore.events.runner;
+package org.meerkatlabs.baseballscore.results.batter;
 
-import org.meerkatlabs.baseballscore.interfaces.IRunnerEvent;
-import org.meerkatlabs.baseballscore.interfaces.IRunnerResult;
+import org.meerkatlabs.baseballscore.interfaces.IBatterResult;
 import org.meerkatlabs.baseballscore.models.AtBat;
 import org.meerkatlabs.baseballscore.models.HalfInning;
-import org.meerkatlabs.baseballscore.models.enums.Base;
-import org.meerkatlabs.baseballscore.results.None;
+import org.meerkatlabs.baseballscore.models.Player;
 
 /**
- * Runner event that captures what happens when the runner hit the ball and advanced to a base.
+ * Data container for a walk.
  *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
-public class Hit implements IRunnerEvent {
+public class Walk implements IBatterResult {
 
     /**
-     * Final base on the hit.
+     * The player that gets credit for the walk.
      */
-    final Base finalBase;
-
-    /**
-     * The batter that got the hit.
-     */
-    final AtBat batter;
+    final Player pitcher;
 
     /**
      * Constructor.
      *
-     * @param batter the batter that got the hit.
-     * @param finalBase bases advanced.
+     * @param pitcher the pitcher that threw the walk.
      */
-    public Hit(final AtBat batter, final Base finalBase) {
-        this.finalBase = finalBase;
-        this.batter = batter;
+    public Walk(final Player pitcher) {
+        this.pitcher = pitcher;
     }
 
     /**
-     * Base reached on hit.
+     * Pitcher accessor.
      *
-     * @return final base reached on hit.
+     * @return pitcher that is credited with the walk.
      */
-    public Base getFinalBase() {
-        return finalBase;
-    }
-
-    /**
-     * Batter accessor.
-     * @return batter.
-     */
-    public AtBat getBatter() {
-        return this.batter;
+    public Player getPitcher() {
+        return pitcher;
     }
 
     @Override
-    public IRunnerResult process(final HalfInning currentHalfInning) {
-        currentHalfInning.getCurrentField().runnerHit(batter, this);
+    public void process(final AtBat currentAtBat, final HalfInning currentHalfInning) {
+        currentHalfInning.getCurrentField().walkRunner(currentAtBat);
 
         currentHalfInning.getBattingTeam().advanceLineup();
 
@@ -79,7 +62,5 @@ public class Hit implements IRunnerEvent {
                 currentHalfInning.getBattingTeam().getCurrentBatter());
 
         currentHalfInning.setCurrentAtBat(nextAtBat);
-
-        return new None();
     }
 }

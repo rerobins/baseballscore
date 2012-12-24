@@ -15,15 +15,19 @@
  * along with BaseballScore.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.meerkatlabs.baseballscore.events.runner;
+package org.meerkatlabs.baseballscore.interfaces;
 
-import org.meerkatlabs.baseballscore.interfaces.IRunnerEvent;
+import org.meerkatlabs.baseballscore.models.HalfInning;
 
 /**
- * Data container for a walk.
- *
+ * Result type that will be used after a runner event has finished.
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
-public class Walk implements IRunnerEvent {
+public interface IRunnerResult {
 
+    /**
+     * Process the result of the runner event.
+     * @param currentHalfInning half inning that the event occurred in.
+     */
+    void process(HalfInning currentHalfInning);
 }

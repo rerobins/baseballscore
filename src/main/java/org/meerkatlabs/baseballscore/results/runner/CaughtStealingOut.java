@@ -17,6 +17,8 @@
 
 package org.meerkatlabs.baseballscore.results.runner;
 
+import org.meerkatlabs.baseballscore.interfaces.IRunnerResult;
+import org.meerkatlabs.baseballscore.models.HalfInning;
 import org.meerkatlabs.baseballscore.models.IPosition;
 import org.meerkatlabs.baseballscore.models.enums.Base;
 import org.meerkatlabs.baseballscore.results.AbstractOut;
@@ -26,7 +28,7 @@ import org.meerkatlabs.baseballscore.results.AbstractOut;
  *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
-public class CaughtStealingOut extends AbstractOut {
+public class CaughtStealingOut extends AbstractOut implements IRunnerResult {
 
     /**
      * Base attempted for.
@@ -67,4 +69,8 @@ public class CaughtStealingOut extends AbstractOut {
         return participants;
     }
 
+    @Override
+    public void process(final HalfInning currentHalfInning) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

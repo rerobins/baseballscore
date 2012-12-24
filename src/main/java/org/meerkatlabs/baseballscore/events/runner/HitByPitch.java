@@ -18,6 +18,8 @@
 package org.meerkatlabs.baseballscore.events.runner;
 
 import org.meerkatlabs.baseballscore.interfaces.IRunnerEvent;
+import org.meerkatlabs.baseballscore.interfaces.IRunnerResult;
+import org.meerkatlabs.baseballscore.models.HalfInning;
 
 /**
  * Batter is hit by a ball.
@@ -26,5 +28,8 @@ import org.meerkatlabs.baseballscore.interfaces.IRunnerEvent;
  */
 public class HitByPitch implements IRunnerEvent {
 
-
+    @Override
+    public IRunnerResult process(final HalfInning currentHalfInning) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

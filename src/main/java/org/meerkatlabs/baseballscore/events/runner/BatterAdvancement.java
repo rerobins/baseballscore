@@ -17,21 +17,23 @@
 
 package org.meerkatlabs.baseballscore.events.runner;
 
+import org.meerkatlabs.baseballscore.interfaces.IBatterEvent;
 import org.meerkatlabs.baseballscore.interfaces.IRunnerEvent;
+import org.meerkatlabs.baseballscore.interfaces.IRunnerResult;
+import org.meerkatlabs.baseballscore.models.HalfInning;
 import org.meerkatlabs.baseballscore.models.enums.Base;
 
 /**
- * A runner event that cause a runner to advance to a new base because of another runner event forced it.  This
- * will also allow for a batter to go from first to third on another batter's single hit.
- *
+ * Used when a batter is allowed to advance and become a runner due to events at the
+ * plate.
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
-public class Advancement implements IRunnerEvent {
+public class BatterAdvancement implements IRunnerEvent {
 
     /**
      * The event that caused this player to move forward at least one base.
      */
-    IRunnerEvent becauseOf;
+    IBatterEvent becauseOf;
 
     /**
      * The base that the runner finished on.
@@ -44,7 +46,7 @@ public class Advancement implements IRunnerEvent {
      * @param becauseOf event that caused the advancement.
      * @param finalBase base runner ended up on.
      */
-    public Advancement(final IRunnerEvent becauseOf, final Base finalBase) {
+    public BatterAdvancement(final IBatterEvent becauseOf, final Base finalBase) {
         this.becauseOf = becauseOf;
         this.finalBase = finalBase;
     }
@@ -53,7 +55,7 @@ public class Advancement implements IRunnerEvent {
      * Return the reason that the runner got to advance to the next base.
      * @return the event that forced this advancement to occur.
      */
-    public IRunnerEvent getBecauseOf() {
+    public IBatterEvent getBecauseOf() {
         return becauseOf;
     }
 
@@ -66,4 +68,8 @@ public class Advancement implements IRunnerEvent {
         return finalBase;
     }
 
+    @Override
+    public IRunnerResult process(final HalfInning currentHalfInning) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }
