@@ -25,10 +25,12 @@ import org.meerkatlabs.baseballscore.events.runner.Hit;
 import org.meerkatlabs.baseballscore.models.AtBat;
 import org.meerkatlabs.baseballscore.models.Game;
 import org.meerkatlabs.baseballscore.models.HalfInning;
+import org.meerkatlabs.baseballscore.models.Runner;
 import org.meerkatlabs.baseballscore.models.enums.AtBatResult;
 import org.meerkatlabs.baseballscore.models.enums.Base;
 import org.meerkatlabs.baseballscore.models.enums.InPlay;
 import org.meerkatlabs.baseballscore.models.enums.Pitch;
+import org.meerkatlabs.baseballscore.results.runner.Scored;
 import org.meerkatlabs.baseballscore.util.BuildGame;
 
 /**
@@ -167,7 +169,7 @@ public class GameControllerTestCase extends TestCase {
         assertSame(game.getAwayLineup().getPlayerAtIndex(1), secondAtBat.getBatter());
 
         // Make sure that the batter is now on first base.
-        assertSame(firstAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE));
+        assertSame(firstAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE).getBatter());
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.SECOND_BASE));
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.THIRD_BASE));
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.HOME_PLATE));
@@ -212,12 +214,14 @@ public class GameControllerTestCase extends TestCase {
         controller.pitch(new Ball());
 
         // Make sure that the batter is now on first base.
-        assertSame(firstAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE));
+        assertSame(firstAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE).getBatter());
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.SECOND_BASE));
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.THIRD_BASE));
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.HOME_PLATE));
 
-        // At this point the number of outs should still be 0.
+        Runner firstRunner = controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE);
+
+                // At this point the number of outs should still be 0.
         // and the current at bat should be different than the first one.
         // And the batter should be on first base.
         AtBat secondAtBat = controller.currentHalfInning.getCurrentAtBat();
@@ -226,8 +230,8 @@ public class GameControllerTestCase extends TestCase {
         controller.pitch(new Ball());
         controller.pitch(new Ball());
 
-        assertSame(secondAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE));
-        assertSame(firstAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.SECOND_BASE));
+        assertSame(secondAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE).getBatter());
+        assertSame(firstAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.SECOND_BASE).getBatter());
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.THIRD_BASE));
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.HOME_PLATE));
 
@@ -237,9 +241,9 @@ public class GameControllerTestCase extends TestCase {
         controller.pitch(new Ball());
         controller.pitch(new Ball());
 
-        assertSame(thirdAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE));
-        assertSame(secondAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.SECOND_BASE));
-        assertSame(firstAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.THIRD_BASE));
+        assertSame(thirdAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE).getBatter());
+        assertSame(secondAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.SECOND_BASE).getBatter());
+        assertSame(firstAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.THIRD_BASE).getBatter());
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.HOME_PLATE));
 
         AtBat fourthAtBat = controller.currentHalfInning.getCurrentAtBat();
@@ -248,13 +252,13 @@ public class GameControllerTestCase extends TestCase {
         controller.pitch(new Ball());
         controller.pitch(new Ball());
 
-        assertSame(fourthAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE));
-        assertSame(thirdAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.SECOND_BASE));
-        assertSame(secondAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.THIRD_BASE));
+        assertSame(fourthAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE).getBatter());
+        assertSame(thirdAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.SECOND_BASE).getBatter());
+        assertSame(secondAtBat, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.THIRD_BASE).getBatter());
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.HOME_PLATE));
 
         // Make sure that the person on home plate is marked as having scored.
-        assertEquals(AtBatResult.SCORED, firstAtBat.getResult());
+        assertEquals(Scored.class, firstRunner.getResult().getClass());
 
         assertNotSame(firstAtBat, secondAtBat);
         assertNotSame(secondAtBat, thirdAtBat);
@@ -272,18 +276,20 @@ public class GameControllerTestCase extends TestCase {
 
         controller.inPlay(new Hit(firstBatter, Base.FIRST_BASE));
 
-        assertSame(firstBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE));
+        assertSame(firstBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE).getBatter());
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.SECOND_BASE));
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.THIRD_BASE));
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.HOME_PLATE));
+
+        Runner firstRunner = controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE);
 
         AtBat secondBatter = controller.currentHalfInning.getCurrentAtBat();
         assertNotSame(firstBatter, secondBatter);
 
         controller.inPlay(new Hit(secondBatter, Base.FIRST_BASE));
 
-        assertSame(secondBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE));
-        assertSame(firstBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.SECOND_BASE));
+        assertSame(secondBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE).getBatter());
+        assertSame(firstBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.SECOND_BASE).getBatter());
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.THIRD_BASE));
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.HOME_PLATE));
 
@@ -291,21 +297,21 @@ public class GameControllerTestCase extends TestCase {
         assertNotSame(secondBatter, thirdBatter);
         controller.inPlay(new Hit(thirdBatter, Base.FIRST_BASE));
 
-        assertSame(thirdBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE));
-        assertSame(secondBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.SECOND_BASE));
-        assertSame(firstBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.THIRD_BASE));
+        assertSame(thirdBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE).getBatter());
+        assertSame(secondBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.SECOND_BASE).getBatter());
+        assertSame(firstBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.THIRD_BASE).getBatter());
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.HOME_PLATE));
 
         AtBat fourthBatter = controller.currentHalfInning.getCurrentAtBat();
         assertNotSame(thirdBatter, fourthBatter);
         controller.inPlay(new Hit(fourthBatter, Base.FIRST_BASE));
 
-        assertSame(fourthBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE));
-        assertSame(thirdBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.SECOND_BASE));
-        assertSame(secondBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.THIRD_BASE));
+        assertSame(fourthBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.FIRST_BASE).getBatter());
+        assertSame(thirdBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.SECOND_BASE).getBatter());
+        assertSame(secondBatter, controller.currentHalfInning.getCurrentField().getBaseRunner(Base.THIRD_BASE).getBatter());
         assertNull(controller.currentHalfInning.getCurrentField().getBaseRunner(Base.HOME_PLATE));
 
-        assertEquals(AtBatResult.SCORED, firstBatter.getResult());
+        assertEquals(Scored.class, firstRunner.getResult().getClass());
     }
 
 }

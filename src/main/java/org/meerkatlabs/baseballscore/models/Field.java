@@ -22,6 +22,7 @@ import org.meerkatlabs.baseballscore.models.enums.AtBatResult;
 import org.meerkatlabs.baseballscore.models.enums.Base;
 import org.meerkatlabs.baseballscore.models.enums.InPlay;
 import org.meerkatlabs.baseballscore.models.interfaces.IInPlayDescription;
+import org.meerkatlabs.baseballscore.results.runner.Scored;
 
 /**
  * Object that will contain the current state of the field with regards to base runners.  It
@@ -40,7 +41,7 @@ public class Field {
     /**
      * Collection of base runners that are maintained.
      */
-    final AtBat[] baseRunners = new AtBat[Base.values().length];
+    final Runner[] baseRunners = new Runner[Base.values().length];
 
     /**
      * Default constructor.
@@ -63,11 +64,13 @@ public class Field {
 
         Base baseEndedUpOn = hit.getFinalBase();
 
+        Runner runner = new Runner(batter);
+
         for (int i = 0; i <= baseEndedUpOn.ordinal(); ++i) {
 
             Base baseToMoveTo = Base.values()[i];
 
-            advanceRunners(baseToMoveTo, batter);
+            advanceRunners(baseToMoveTo, runner);
             updateScore();
         }
 
@@ -78,7 +81,7 @@ public class Field {
      * @param atBat the runner that should advance to first base.
      */
     public void walkRunner(final AtBat atBat) {
-        advanceRunners(Base.FIRST_BASE, atBat);
+        advanceRunners(Base.FIRST_BASE, new Runner(atBat));
         updateScore();
     }
 
@@ -86,9 +89,9 @@ public class Field {
      * Advance the runners starting at the base to start at.
      *
      * @param base  the base that the at bat should be placed at.
-     * @param atBat the at bat that should be placed on the base.
+     * @param runner the runner that should be placed on the base.
      */
-    void advanceRunners(final Base base, final AtBat atBat) {
+    void advanceRunners(final Base base, final Runner runner) {
         // Probably the easiest way to execute this is to run it recursively.
 
         if (baseRunners[base.ordinal()] != null) {
@@ -100,7 +103,7 @@ public class Field {
 
         }
 
-        baseRunners[base.ordinal()] = atBat;
+        baseRunners[base.ordinal()] = runner;
 
     }
 
@@ -110,7 +113,7 @@ public class Field {
      * @param base base to look up.
      * @return the base runner or null.
      */
-    public AtBat getBaseRunner(final Base base) {
+    public Runner getBaseRunner(final Base base) {
         switch (base) {
             case FIRST_BASE:
             case SECOND_BASE:
@@ -128,15 +131,15 @@ public class Field {
      * Set the base runner onto the base provided.
      *
      * @param base  base that the runner should be on.
-     * @param atBat the runner that should be there.
+     * @param runner the runner that should be there.
      */
-    void setBaseRunner(final Base base, final AtBat atBat) {
+    void setBaseRunner(final Base base, final Runner runner) {
         switch (base) {
             case FIRST_BASE:
             case SECOND_BASE:
             case THIRD_BASE:
             case HOME_PLATE:
-                baseRunners[base.ordinal()] = atBat;
+                baseRunners[base.ordinal()] = runner;
                 break;
 
             case NONE:
@@ -149,10 +152,10 @@ public class Field {
      * Update the base runner that is currently on home, if there is one.
      */
     void updateScore() {
-        AtBat atBat = getBaseRunner(Base.HOME_PLATE);
+        Runner runner = getBaseRunner(Base.HOME_PLATE);
 
-        if (atBat != null) {
-            atBat.setResult(AtBatResult.SCORED);
+        if (runner != null) {
+            runner.setResult(new Scored());
         }
 
         // Clear the base runner that is on home plate since he is no longer in play.

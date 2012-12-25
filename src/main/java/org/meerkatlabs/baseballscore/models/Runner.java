@@ -17,34 +17,36 @@
 
 package org.meerkatlabs.baseballscore.models;
 
+import org.meerkatlabs.baseballscore.interfaces.IRunnerResult;
+
 /**
- * Data encapsulating an error.
+ * Created with IntelliJ IDEA.
+ * User: rerobins
+ * Date: 12/24/12
+ * Time: 2:15 PM
  *
  * @author Robert Robinson rerobins@meerkatlabs.org
  */
-public class PlayerError {
+public class Runner {
 
-    /**
-     * The position that caused the error.
-     */
-    IPosition playerPosition;
+    final AtBat batter;
 
-    /**
-     * Constructor.
-     *
-     * @param playerPosition position that caused the error.
-     */
-    public PlayerError(final IPosition playerPosition) {
-        this.playerPosition = playerPosition;
+    IRunnerResult result;
+
+    public Runner(final AtBat batter) {
+        this.batter = batter;
     }
 
-    /**
-     * Player position.
-     *
-     * @return position.
-     */
-    public IPosition getPlayerPosition() {
-        return playerPosition;
+    public AtBat getBatter() {
+        return batter;
+    }
+
+    public IRunnerResult getResult() {
+        return result;
+    }
+
+    public void setResult(final IRunnerResult result) {
+        this.result = result;
     }
 
 }

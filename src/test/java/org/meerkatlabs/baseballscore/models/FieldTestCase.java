@@ -36,10 +36,10 @@ public class FieldTestCase extends TestCase {
         Player firstBaseRunner = new Player(1, "First");
         Player batter = new Player(0, "Batter");
 
-        AtBat thirdBase = new AtBat(lousyPitcher, thirdBaseRunner);
-        AtBat secondBase = new AtBat(lousyPitcher, secondBaseRunner);
-        AtBat firstBase = new AtBat(lousyPitcher, firstBaseRunner);
-        AtBat newRunner = new AtBat(lousyPitcher, batter);
+        Runner thirdBase = new Runner(new AtBat(lousyPitcher, thirdBaseRunner));
+        Runner secondBase = new Runner(new AtBat(lousyPitcher, secondBaseRunner));
+        Runner firstBase = new Runner(new AtBat(lousyPitcher, firstBaseRunner));
+        Runner newRunner = new Runner(new AtBat(lousyPitcher, batter));
 
         gameField.baseRunners[Base.THIRD_BASE.ordinal()] = thirdBase;
         gameField.baseRunners[Base.SECOND_BASE.ordinal()] = secondBase;
